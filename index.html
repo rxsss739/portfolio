@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" id="html-root">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="lang-switch">
+    <button id="btn-en" class="active" onclick="setLang('en')">EN</button>
+    <button id="btn-et" onclick="setLang('et')">ET</button>
+  </div>
+
+  <header id="sec-top">
+    <h1 id="name"></h1>
+    <p id="bio"></p>
+  </header>
+
+  <section id="sec-projects">
+    <h2 id="label-projects"></h2>
+    <div class="timeline" id="projects"></div>
+  </section>
+
+  <section id="sec-trophies">
+    <h2 id="label-trophies"></h2>
+    <div class="ledger" id="trophies"></div>
+  </section>
+
+  <section id="sec-companies">
+    <h2 id="label-companies"></h2>
+    <div class="ledger" id="companies"></div>
+  </section>
+
+  <section id="sec-events">
+    <h2 id="label-events"></h2>
+    <ul class="event-list" id="events"></ul>
+  </section>
+
+  <footer>
+    <span id="footer-text"></span>
+  </footer>
+</div>
+
+<script>
+/* =====================================================================
+   SISU / CONTENT
+   Siia paned kogu enda info. Iga sektsioon on eraldi massiiv (array) -
+   lisa, kustuta või muuda kirjeid vastavalt vajadusele. Struktuur on
+   kahes keeles (en/et) - kui sa kaht keelt ei vaja, jäta üks neist
+   lihtsalt teise koopiaks või eemalda keelevaliku nupud index.html-ist.
+
+   Iga massiivi juures on üks näidiskirje, mille saad üle kirjutada.
+   ===================================================================== */
+const content = {
+  en: {
+    name: "Rasmus Kunnus",
+    bio: "Software engineer. Working on different projects and learning new technologies.",
+    labels: {
+      projects: "Projects",
+      trophies: "Awards & certifications",
+      companies: "Companies I've worked for",
+      events: "Events attended",
+      workedFor: "Duration",
+      year: "year", years: "years",
+      month: "month", months: "months",
+      lessThanMonth: "Less than a month",
+      current: "Current",
+      viewProject: "View project",
+      openPanel: "Open panel",
+      discordTitle: "Community",
+      discordMembers: "Members",
+      discordOnline: "Online now",
+      joinDiscord: "Join Discord",
+      discordLoading: "Loading server status...",
+      discordMissing: "Add a server ID to show live stats.",
+      discordError: "Discord stats are currently unavailable."
+    },
+    // PROJEKTID: date = kuupäev/periood tekstina, current = true kui käimasolev
+    // (näitab väikest "live" täppi), tags = oskuste/tehnoloogiate loend,
+    // link = valikuline URL (nt GitHub), discord = true ainult sellel projektil,
+    // millel on oma Discordi server (vt DISCORD_GUILD_ID allpool).
+    projects: [
+      {
+        date: "2024 — Current",
+        current: true,
+        name: "School projects",
+        desc: "Some of the projects i've made in school.",
+        tags: ["C#", "Javascript", "HTML", "CSS", "PHP", "MySQL"],
+        link: "https://github.com/rxsss739/"
+      },
+      {
+        date: "Jan 2026 - Current",
+        current: true,
+        name: "Arbitrage bot",
+        desc: "Automated arbitrage detection for casino markets.",
+        tags: ["Python", "Math", "Machine Learning","Web scraping"],
+        link: ""
+      },
+      {
+        date: "Dec 2025 - Jan 2025",
+        current: false,
+        name: "Crypto Wallet API",
+        desc: "RESTful API for creating and managing cryptocurrency wallets.",
+        tags: ["Python", "FastAPI", "Crypto"],
+        link: "https://github.com/rxsss739/crypto-wallet-api"
+      },
+      {
+        date: "Sept 2026 - Current",
+        current: true,
+        name: "Nutri",
+        desc: "Personal project I am working on to track my nutrition and fitness goals.",
+        tags: ["Node.js", "Express", "PostgreSQL", "HTML", "CSS", "JavaScript"],
+        link: ""
+      }
+    ],
+    // AUHINNAD / SERTIFIKAADID: highlight = true tõstab tulemuse esile.
+    trophies: [
+      { year: "2026", name: "Noormeister Cybersecurity field", result: "4th place", highlight: true }
+    ],
+    // ETTEVÕTTED: startDate/endDate formaadis AAAA-KK-PP, current = true kui
+    // töötad seal endiselt (endDate jäta siis tühjaks).
+    companies: [
+      {
+        name: "Athletebytes OÜ",
+        role: "Software Engineer",
+        period: "06/2026 — <br>09/2026",
+        startDate: "2026-06-26",
+        endDate: "2026-08-31",
+        current: false
+      }
+    ],
+    // ÜRITUSED: details võib jätta tühjaks, kui rida ei peaks avanema.
+    events: [
+      { name: "Noormeister Cybersecurity", date: "2026", details: "10 cybersecurity teams competing for who is the best. Me and my classmate got 4th place out of 10 other schools." },
+    ]
+  },
+  et: {
+    name: "Rasmus Kunnus",
+    bio: "Tarkvaraarendaja. Töötan erinevate projektide kallal ja õpin uusi tehnoloogiaid.",
+    labels: {
+      projects: "Projektid",
+      trophies: "Auhinnad ja sertifikaadid",
+      companies: "Ettevõtted, kus olen töötanud",
+      events: "Osaletud üritused",
+      workedFor: "Kestus",
+      year: "aasta", years: "aastat",
+      month: "kuu", months: "kuud",
+      lessThanMonth: "Alla kuu",
+      current: "Praegu",
+      viewProject: "Vaata projekti",
+      openPanel: "Ava paneel",
+      discordTitle: "Kogukond",
+      discordMembers: "Liikmed",
+      discordOnline: "Hetkel online",
+      joinDiscord: "Liitu Discordiga",
+      discordLoading: "Laen serveri infot...",
+      discordMissing: "Lisa serveri ID, et näha reaalajas statistikat.",
+      discordError: "Discordi statistika pole hetkel saadaval."
+    },
+    projects: [
+    {
+      date: "2024 — Praegu",
+      current: true,
+      name: "Kooli projektid",
+      desc: "Mõned projektid mis olen koolis teinud.",
+      tags: ["C#", "Javascript", "HTML", "CSS", "PHP", "MySQL"],
+      link: "https://github.com/rxsss739/"
+    },
+    {
+      date: "Jan 2026 - Current",
+      current: true,
+      name: "Arbitraaž robot",
+      desc: "Automaatne arbitraaži tuvastamine kasiino turgudel.",
+      tags: ["Python", "Math", "Machine Learning", "Web scraping"],
+      link: ""
+    },
+    {
+      date: "Dec 2025 - Jan 2025",
+      current: false,
+      name: "Krüpto wallet API",
+      desc: "RESTful API krüpto walletide loomiseks ja haldamiseks.",
+      tags: ["Python", "FastAPI", "Crypto"],
+      link: "https://github.com/rxsss739/crypto-wallet-api"
+    },
+    {
+      date: "Sept 2026 - Current",
+      current: true,
+      name: "Nutri",
+      desc: "Isiklik projekt, milles töötan oma toitumise ja fitnessi eesmärkide jälgimiseks.",
+      tags: ["Node.js", "Express", "PostgreSQL", "HTML", "CSS", "JavaScript"],
+      link: ""
+    }
+  ],
+    trophies: [
+      { year: "2026", name: "Noormeister Küberkaitse ala", result: "4. koht", highlight: true }
+    ],
+    companies: [
+      {
+        name: "Athletebytes OÜ",
+        role: "Tarkvaraarendaja",
+        period: "06/2026 — <br>09/2026",
+        startDate: "2026-06-26",
+        endDate: "2026-08-31",
+        current: false
+      }
+    ],
+    events: [
+      { name: "Noormeister Küberkaitse", date: "2026", details: "10 küberkaitse meeskonda võistlevad, kes on parim. Minu ja minu klassikaaslane saime 4. koha 10 teise kooli seas." },
+    ]
+  }
+};
+
+
+
+let currentLang = 'en';
+
+function formatDuration(startDate, labels, endDate = new Date()){
+  const start = new Date(`${startDate}T00:00:00`);
+  let months = (endDate.getFullYear() - start.getFullYear()) * 12;
+  months += endDate.getMonth() - start.getMonth();
+  if(endDate.getDate() < start.getDate()) months -= 1;
+  months = Math.max(0, months);
+
+  const years = Math.floor(months / 12);
+  const remainingMonths = months % 12;
+  const duration = [];
+  if(years) duration.push(`${years} ${years === 1 ? labels.year : labels.years}`);
+  if(remainingMonths) duration.push(`${remainingMonths} ${remainingMonths === 1 ? labels.month : labels.months}`);
+  return duration.join(', ') || labels.lessThanMonth;
+}
+
+async function loadDiscordStatus(labels){
+  const members = document.getElementById('discord-members');
+  const online = document.getElementById('discord-online');
+  const status = document.getElementById('discord-status');
+  const join = document.getElementById('discord-join');
+  if(!members) return;
+
+  if(DISCORD_INVITE_URL){
+    join.href = DISCORD_INVITE_URL;
+    join.hidden = false;
+  } else {
+    join.hidden = true;
+  }
+
+  if(!DISCORD_GUILD_ID){
+    status.textContent = labels.discordMissing;
+    return;
+  }
+
+  status.textContent = labels.discordLoading;
+  try {
+    const res = await fetch(`https://discord.com/api/v10/invites/${DISCORD_INVITE_URL.split('/').pop()}?with_counts=true`);
+    if(!res.ok) throw new Error('unavailable');
+    const data = await res.json();
+    members.textContent = data.approximate_member_count ?? '--';
+    online.textContent = data.approximate_presence_count ?? '--';
+    status.textContent = data.guild?.name || labels.discordTitle;
+  } catch(err) {
+    status.textContent = labels.discordError;
+  }
+}
+
+function projectDiscordBlock(p, labels){
+  if(!p.discord) return '';
+  return `
+    <div class="discord-panel">
+      <div class="discord-head">
+        <span>${labels.discordTitle}</span>
+        <p class="discord-status" id="discord-status">${labels.discordLoading}</p>
+      </div>
+      <div class="discord-stats">
+        <div><span>${labels.discordMembers}</span><strong id="discord-members">--</strong></div>
+        <div><span>${labels.discordOnline}</span><strong id="discord-online">--</strong></div>
+      </div>
+      <a class="text-link" id="discord-join" href="#" target="_blank" rel="noopener" hidden>${labels.joinDiscord}</a>
+    </div>
+  `;
+}
+
+function render(lang){
+  const c = content[lang];
+  currentLang = lang;
+
+  document.getElementById('html-root').setAttribute('lang', lang);
+  document.getElementById('name').textContent = c.name;
+  document.getElementById('bio').textContent = c.bio;
+  document.getElementById('label-projects').textContent = c.labels.projects;
+  document.getElementById('label-trophies').textContent = c.labels.trophies;
+  document.getElementById('label-companies').textContent = c.labels.companies;
+  document.getElementById('label-events').textContent = c.labels.events;
+  document.getElementById('footer-text').textContent = `© ${new Date().getFullYear()} ${c.name}`;
+
+  /* projects: vertical timeline */
+  document.getElementById('projects').innerHTML = c.projects.map((p, i) => `
+    <div class="tl-row">
+      <div class="tl-rail">
+        <span class="tl-node${p.current ? ' is-live' : ''}"></span>
+        <span class="tl-line"></span>
+      </div>
+      <details class="tl-content">
+        <summary>
+          <span class="tl-date">${p.date}</span>
+          <span class="tl-name">${p.name}</span>
+        </summary>
+        <div class="tl-body">
+          <p>${p.details || p.desc}</p>
+          <div class="tag-row">${(p.tags || []).map(t => `<span class="tag">${t}</span>`).join('')}</div>
+          <div class="tl-links">
+            ${p.link ? `<a class="text-link" href="${p.link}" target="_blank" rel="noopener">${c.labels.viewProject}</a>` : ''}
+            ${p.ucpLink ? `<a class="text-link" href="${p.ucpLink}" target="_blank" rel="noopener">${c.labels.openPanel}</a>` : ''}
+          </div>
+          ${projectDiscordBlock(p, c.labels)}
+        </div>
+      </details>
+    </div>
+  `).join('');
+
+  if(c.projects.some(p => p.discord)){
+    document.querySelectorAll('#projects details').forEach((el, i) => {
+      if(c.projects[i].discord){
+        el.addEventListener('toggle', () => { if(el.open) loadDiscordStatus(c.labels); }, { once: true });
+      }
+    });
+  }
+
+  /* trophies: ledger rows */
+  document.getElementById('trophies').innerHTML = [...c.trophies].reverse().map(t => `
+    <div class="ledger-row">
+      <span class="ledger-year">${t.year}</span>
+      <span class="ledger-main">${t.name}</span>
+      <span class="ledger-value${t.highlight ? ' is-highlight' : ''}">${t.result}</span>
+    </div>
+  `).join('');
+
+  /* companies: ledger rows */
+  document.getElementById('companies').innerHTML = [...c.companies].reverse().map(co => `
+    <div class="ledger-row">
+      <span class="ledger-year${co.current ? ' is-live' : ''}">${co.period}</span>
+      <span class="ledger-main">
+        <span class="ledger-title">${co.name}</span>
+        <span class="ledger-sub">${co.role}</span>
+      </span>
+      <span class="ledger-value">${formatDuration(co.startDate, c.labels, co.endDate ? new Date(`${co.endDate}T00:00:00`) : new Date())}</span>
+    </div>
+  `).join('');
+
+  /* events: accordion list */
+  document.getElementById('events').innerHTML = [...c.events].reverse().map(e => {
+    const head = `<span class="event-name">${e.name}</span><span class="event-date">${e.date}</span>`;
+    if(!e.details) return `<li class="event-item event-plain">${head}</li>`;
+    return `
+      <li class="event-item">
+        <details>
+          <summary>${head}<span class="event-chevron" aria-hidden="true"></span></summary>
+          <p class="event-details">${e.details}</p>
+        </details>
+      </li>
+    `;
+  }).join('');
+}
+
+function setLang(lang){
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('btn-et').classList.toggle('active', lang === 'et');
+  render(lang);
+}
+
+render('en');
+</script>
+
+</body>
+</html>
